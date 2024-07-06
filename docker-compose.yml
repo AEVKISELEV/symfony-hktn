@@ -21,6 +21,8 @@ services:
       - app-network
 
   app:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build:
       context: docker/php
       dockerfile: Dockerfile
@@ -66,6 +68,8 @@ services:
       - app-network
 
   go:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build: ./docker/go
     container_name: go
     networks:

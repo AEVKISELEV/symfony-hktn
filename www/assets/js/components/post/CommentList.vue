@@ -1,5 +1,5 @@
 <template>
-  <div className="comment-list">
+  <div class="comment-list">
     <Comment v-for="comment in comments" :key="comment.id" :comment="comment" @reply-to-comment="handleReplyToComment"/>
   </div>
 </template>
@@ -8,31 +8,33 @@
 import Comment from './Comment.vue';
 
 export default {
-name: 'CommentList',
-components: {
-Comment
-},
-props: {
-comments: {
-type: Array,
-required: true
-}
-},
-methods: {
-handleReplyToComment(commentId) {
+  name: 'CommentList',
+  components: {
+    Comment
+  },
+  props: {
+    comments: {
+      type: Array,
+      required: true
+    }
+  },
+  methods: {
+    handleReplyToComment(commentId) {
 // Логика для обработки ответа на комментарий
-console.log(`Reply to comment ${commentId}`);
-}
-}
+      console.log(`Reply to comment ${commentId}`);
+    }
+  }
 }
 </script>
 
 <style scoped>
 .comment-list {
-margin-top: 16px;
+  margin-top: 16px;
+  border-radius: 8px;
+  background: #FFFFFF;
 }
 
 .comment-list h3 {
-margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 </style>
