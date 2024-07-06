@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,14 +16,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	#[ORM\Column(unique: true)]
 	public ?int $vkId = null;
 
-	#[ORM\Column(nullable: true)]
+	#[ORM\Column(type: Types::STRING, nullable: true)]
 	public ?string $photo = null;
 
-	#[ORM\Column(length: 180)]
+	#[ORM\Column(type: Types::STRING, length: 180)]
 	private string $firstname;
 
-	#[ORM\Column(length: 180, nullable: true)]
+	#[ORM\Column(type: Types::STRING, length: 180, nullable: true)]
 	private ?string $lastname = null;
+
+	#[ORM\Column(type: Types::TEXT, nullable: true)]
+	private ?string $refreshToken = null;
+
+	#[ORM\Column(type: Types::TEXT, nullable: true)]
+	private ?string $accessToken = null;
 
 	#[ORM\Column]
 	private array $roles = [];
@@ -38,40 +45,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 		return $this->vkId;
 	}
 
-	public function getEmail(): ?string
+	public function setVkId(?int $vkId): void
 	{
-		return $this->email;
-	}
-
-	public function setEmail(string $email): static
-	{
-		$this->email = $email;
-
-		return $this;
-	}
-
-	public function getName(): ?string
-	{
-		return $this->name;
-	}
-
-	public function setName(string $name): static
-	{
-		$this->name = $name;
-
-		return $this;
-	}
-
-	public function getSurname(): ?string
-	{
-		return $this->surname;
-	}
-
-	public function setSurname(string $surname): static
-	{
-		$this->surname = $surname;
-
-		return $this;
+		$this->vkId = $vkId;
 	}
 
 	/**
@@ -81,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	 */
 	public function getUserIdentifier(): string
 	{
-		return (string)$this->email;
+		return (string)$this->vkId;
 	}
 
 	/**
@@ -125,5 +101,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	{
 		// If you store any temporary, sensitive data on the user, clear it here
 		// $this->plainPassword = null;
+	}
+
+	public function getFirstname(): string
+	{
+		return $this->firstname;
+	}
+
+	public function setFirstname(string $firstname): User
+	{
+		$this->firstname = $firstname;
+
+		return $this;
+	}
+
+	public function getPhoto(): ?string
+	{
+		return $this->photo;
+	}
+
+	public function setPhoto(?string $photo): User
+	{
+		$this->photo = $photo;
+
+		return $this;
+	}
+
+	public function getLastname(): ?string
+	{
+		return $this->lastname;
+	}
+
+	public function setLastname(?string $lastname): User
+	{
+		$this->lastname = $lastname;
+
+		return $this;
+	}
+
+	public function getRefreshToken(): ?string
+	{
+		return $this->refreshToken;
+	}
+
+	public function setRefreshToken(?string $refreshToken): User
+	{
+		$this->refreshToken = $refreshToken;
+
+		return $this;
+	}
+
+	public function getAccessToken(): ?string
+	{
+		return $this->accessToken;
+	}
+
+	public function setAccessToken(?string $accessToken): User
+	{
+		$this->accessToken = $accessToken;
+
+		return $this;
 	}
 }

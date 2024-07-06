@@ -1,29 +1,31 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Ai\Post\Analytic;
 
-use App\Repository\CommentRepository;
+use App\Entity\Post;
+use App\Repository\Ai\Post\Analytic\GenerateResultRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CommentRepository::class)]
-#[ORM\Table(name: '`app_comment`')]
-class Comment
+#[ORM\Entity(repositoryClass: GenerateResultRepository::class)]
+#[ORM\Table(name: '`app_ai_post_analytic_generate_result`')]
+class GenerateResult
 {
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column(type: Types::BIGINT)]
 	private int $id;
 
-	#[ORM\Column(type: Types::STRING, length: 150)]
-	public string $author;
+	#[ORM\ManyToOne(targetEntity: Post::class)]
+	#[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false)]
+	public Post $post;
+
 	#[ORM\Column(type: Types::STRING, length: 200, nullable: true)]
 	public ?string $content = null;
+
 	#[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, updatable: false)]
 	public DateTimeImmutable $dateCreate;
-	#[ORM\Column(type: Types::BIGINT)]
-	private int $likesAmount;
 
 	public function getId(): int
 	{

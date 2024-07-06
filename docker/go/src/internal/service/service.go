@@ -1,10 +1,12 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/AEVKISELEV/symfony-hktn/internal/ai"
 	"github.com/AEVKISELEV/symfony-hktn/internal/logger"
 	"github.com/AEVKISELEV/symfony-hktn/internal/rabbit"
+	"github.com/AEVKISELEV/symfony-hktn/internal/util"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 	"os"
@@ -58,7 +60,7 @@ func Start() error {
 		return fmt.Errorf("cannot create rabbit instance")
 	}
 
-	s.aiText, err = ai.NewTextGenerator(s.config.AITextConfig)
+	s.aiText, err = ai.NewTextGenerator(s.config.AITextConfig, "http://nginx/api/v1/ai/generate")
 	if err != nil {
 		return fmt.Errorf("cannot create ai text generator: %w", err)
 	}
@@ -82,8 +84,35 @@ func (s *Service) Listen() error {
 	return nil
 }
 
+type QueueData struct {
+	ID      string `json:"id"`
+	Type    string `json:"type"`
+	Content any    `json:"content"`
+}
+
 func (s *Service) handleAnalysis(d amqp.Delivery) error {
 	s.logger.Info("handle analysis", zap.String("body", string(d.Body)))
+
+	var data QueueData
+	err := json.Unmarshal(d.Body, &data)
+	if err != nil {
+		return fmt.Errorf("cannot unmarshal body: %w", err)
+	}
+
+	switch data.Type {
+	case "text":
+		var textData ai.TextData
+		err = util.ParseJSONData(data.Content, &textData)
+		if err == nil {
+			return s.aiText.GenerateText(data.ID, textData)
+		}
+	default:
+		err = fmt.Errorf("unknown type '%s'", data.Type)
+	}
+
+	if err != nil {
+		return fmt.Errorf("cannot parse data from queue: %w", err)
+	}
 
 	return nil
 }
