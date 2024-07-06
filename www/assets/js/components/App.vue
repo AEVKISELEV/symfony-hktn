@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
-    <nav>
-      <button @click="goToAuth">Go to Auth</button>
-    </nav>
+  <div>
+    <div v-if="isVisible" id="app">
+      <nav>
+        <button @click="goToGroups">Go to Groups</button>
+      </nav>
+    </div>
     <router-view/>
   </div>
 </template>
@@ -10,9 +12,15 @@
 <script>
 export default {
   name: 'App',
+  data() {
+    return {
+      isVisible: true
+    };
+  },
   methods: {
-    goToAuth() {
-      this.$router.push('/auth');
+    goToGroups() {
+      this.isVisible = false;
+      this.$router.push('/groups');
     }
   }
 };
@@ -20,7 +28,7 @@ export default {
 
 <style>
 nav {
-display: flex;
-gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 </style>

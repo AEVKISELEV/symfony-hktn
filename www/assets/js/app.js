@@ -1,13 +1,16 @@
-import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router'
+import {createApp} from 'vue';
+import {createRouter, createWebHistory} from 'vue-router'
 import App from './components/App.vue';
-import Auth from './components/auth/Auth.vue'
+import Main from './components/Main.vue';
 
 const router = createRouter({
-	routes: [{
-		path: '/auth',
-		component: Auth
-	}],
+	routes: [
+		{
+			path: '/groups',
+			component: Main
+		},
+	],
+
 	history: createWebHistory()
 })
 
