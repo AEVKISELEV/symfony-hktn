@@ -83,11 +83,13 @@ class VKController extends AbstractController
 	)
 	{
 		$token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-		$tokenStorage->setToken($token->getUserIdentifier(), $token);
+		$token->setUser($user);
+		$tokenStorage->setToken('mytesttoken', $token);
 
 		// If you want to make authentication persistent across requests:
 		$requestStack->getSession()->set('_security_main', serialize($token));
 		$requestStack->getSession()->set('access_token', $user->getAccessToken());
+		$requestStack->getSession()->set('user_id', $user->getId());
 
 		// Fire the login event manually
 		$event = new InteractiveLoginEvent($request, $token);
