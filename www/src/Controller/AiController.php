@@ -15,6 +15,16 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AiController extends BaseController
 {
 	#[Route(path: "/api/v1/ai/generate", name: "app_ai_generate", methods: ["POST"])]
+	#[OA\RequestBody(
+		required: true,
+		content: new OA\JsonContent(
+			properties: [
+							new OA\Property(property: "id", type: "string"),
+							new OA\Property(property: "content", type: "string"),
+						],
+			type:       "object",
+		)
+	)]
 	public function set(
 		Request $request,
 		GenerateResultRepository $generateResultRepository,
@@ -52,7 +62,7 @@ final class AiController extends BaseController
 		return $this->json(['status' => 'ok']);
 	}
 
-	#[Route(path: "/api/v1/analytic/generate", name: "app_ai_analytic", methods: ["POST"])]
+	#[Route(path: "/api/v1/analytic/generate", name: "app_ai_analytic_gen", methods: ["POST"])]
 	#[OA\RequestBody(
 		description: "Create a new group",
 		required: true,
@@ -129,8 +139,21 @@ final class AiController extends BaseController
 				'comments' => $commentsMe,
 			],
 		];
+		$message2 = [
+			'type' => "IMAGE",
+			'id' => $postId . '.' . $groupId . '.' . GenerateResult::IMAGE,
+			'content' => [
+				'post' => [
+					'text' => $post['text'],
+					'likes' => $post['likes']['count'] ?? 0,
+					'attachments' => [],
+				],
+				'comments' => $commentsMe,
+			],
+		];
 
 		$producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message)), 'analysis');
+		$producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message2)), 'analysis');
 
 		return $this->json(
 			[
@@ -139,7 +162,6 @@ final class AiController extends BaseController
 				'post' => $post,
 			],
 		);
-
 	}
 
 	#[Route(path: "/api/v1/analytic/{postId}/{groupId}", name: "app_ai_analytic_by_post", methods: ["get"])]
@@ -153,7 +175,7 @@ final class AiController extends BaseController
 		$res = [];
 		foreach ($generateResult as $item)
 		{
-			$res[] = ['content' => $item->content, 'dateCreate' => $item->dateCreate];
+			$res[] = ['content' => $item->content, 'dateCreate' => $item->dateCreate, 'type' => $item->type];
 		}
 
 		return $this->json(

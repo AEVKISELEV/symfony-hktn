@@ -10,9 +10,6 @@
     <div class="comment-content">
       <p>{{ comment.text }}</p>
     </div>
-    <div class="comment-actions">
-      <button @click="replyToComment">Reply</button>
-    </div>
     <div class="replies" v-if="comment.thread.items && comment.thread.items.length">
       <Comment v-for="reply in comment.thread.items" :key="reply.id" :comment="reply" />
     </div>
@@ -42,11 +39,9 @@ export default {
 
 <style scoped>
 .comment {
-  border: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   padding: 8px;
   margin-bottom: 8px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
 }
 
 .comment-header {
