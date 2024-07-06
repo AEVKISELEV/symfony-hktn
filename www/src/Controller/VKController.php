@@ -28,6 +28,11 @@ class VKController extends AbstractController
 		$this->clientRegistry = $clientRegistry;
 	}
 
+	#[\Symfony\Component\Routing\Attribute\Route('/login', 'login', methods: ['GET'])]
+	public function loginAction(Request $request)
+	{
+		return $this->render('index.html.twig');
+	}
 	#[\Symfony\Component\Routing\Attribute\Route('/connect/vk', 'connect_vk_start', methods: ['GET'])]
 	public function connectAction(Request $request)
 	{
