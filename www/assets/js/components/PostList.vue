@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<component :is="currentComponent" :groupId="selectedPost"/>
+		<component :is="currentComponent" :groupId="selectedGroup"/>
 	</div>
 </template>
 
@@ -13,11 +13,11 @@ export default {
 	name: 'PostList',
 	components: {List, Empty},
 	props: {
-		selectedPost: Number,
+		selectedGroup: Number,
 	},
 	computed: {
 		currentComponent() {
-			return this.selectedPost ? 'List' : 'Empty';
+			return this.selectedGroup ? 'List' : 'Empty';
 		}
 	},
 };
