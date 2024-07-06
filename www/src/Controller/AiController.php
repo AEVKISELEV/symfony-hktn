@@ -30,7 +30,7 @@ final class AiController extends BaseController
 		GenerateResultRepository $generateResultRepository,
 	): Response
 	{
-		$jsonka = json_decode($request->getContent());
+		$jsonka = json_decode($request->getContent(), true);
 		$id = (string)($jsonka['id'] ?? 0);
 		$content = (string)($jsonka['content'] ?? '');
 		if (!$id)
