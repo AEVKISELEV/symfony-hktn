@@ -15,7 +15,8 @@
         "symfony/runtime": "6.4.*",
         "symfony/security-bundle": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
-        "symfony/yaml": "6.4.*"
+        "symfony/yaml": "6.4.*",
+        "vkcom/vk-php-sdk": "^5.131"
     },
     "config": {
         "allow-plugins": {
