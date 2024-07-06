@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/AEVKISELEV/symfony-hktn/internal/logger"
 	"github.com/AEVKISELEV/symfony-hktn/internal/rabbit"
+	amqp "github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 	"os"
 	"strconv"
@@ -61,6 +62,30 @@ func Start() error {
 
 func (s *Service) Listen() error {
 	s.logger.Info("Service start listening")
+
+	s.routeQueue("analysis", s.handleAnalysis)
+	return nil
+}
+
+func (s *Service) handleAnalysis(d amqp.Delivery) error {
+	s.logger.Info("handle analysis", zap.String("body", string(d.Body)))
+	return nil
+}
+
+func (s *Service) routeQueue(queueName string, handler func(d amqp.Delivery) error) error {
+	msgs, err := s.rabbit.CreateQueue(queueName)
+	if err != nil {
+		return fmt.Errorf("cannot create queue: %w", err)
+	}
+
+	go func() {
+		for msg := range msgs {
+			err := handler(msg)
+			if err != nil {
+				s.logger.Error("cannot handle message", zap.String("queue_name", queueName), zap.Error(err))
+			}
+		}
+	}()
 
 	return nil
 }
