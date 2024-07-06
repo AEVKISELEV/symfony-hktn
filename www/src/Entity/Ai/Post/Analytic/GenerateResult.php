@@ -19,7 +19,7 @@ class GenerateResult
 	#[ORM\Column(type: Types::TEXT)]
 	public string $vkPostId;
 
-	#[ORM\Column(type: Types::STRING, length: 200)]
+	#[ORM\Column(type: Types::TEXT)]
 	public string $content;
 
 	#[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, updatable: false)]
