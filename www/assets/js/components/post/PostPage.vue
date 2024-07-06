@@ -1,8 +1,12 @@
 <template>
-  <div className="single-post-page">
+  <div class="single-post-page">
     <Post v-if="post" :post="post" @like-post="handleLikePost" @comment-post="handleCommentPost"/>
+    <div class="post-actions">
+      <div>Нравится: {{ post?.likes.count }}</div>
+      <div>Комментарии: {{ post?.comments.count }}</div>
+    </div>
     <CommentList v-if="comments.length" :comments="comments" @reply-to-comment="handleReplyToComment"/>
-    <button @click="goToAnal">
+    <button @click="goToAnal" class="generate-btn">
       Сгенерить
     </button>
   </div>
@@ -103,9 +107,31 @@ export default {
 <style scoped>
 .single-post-page {
   padding: 16px;
+  border-radius: 10px;
+  background: #F9F9F9;
 }
 
 .single-post-page h1 {
   margin-bottom: 16px;
+}
+
+.generate-btn {
+  position: absolute;
+  color: #FFF;
+  text-align: center;
+  font-family: Roboto,sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px; /* 125% */
+  display: flex;
+  width: 310px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  background: #5A7BB0;
+  border: none;
 }
 </style>

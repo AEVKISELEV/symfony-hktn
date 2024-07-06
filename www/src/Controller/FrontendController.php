@@ -15,6 +15,11 @@ final class FrontendController extends BaseController
 	#[Route("/", 'app_index', methods: ['GET'])]
 	public function index(SessionInterface $session, ClientRegistry $clientRegistry): Response
 	{
+		if (!$session->get('access_token'))
+		{
+			return $this->redirect('/login');
+		}
+
 		return $this->render('index.html.twig');
 	}
 }

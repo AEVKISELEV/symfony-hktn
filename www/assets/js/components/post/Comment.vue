@@ -4,11 +4,11 @@
       <img :src="comment.user.avatar" alt="User Avatar" class="avatar" />
       <div class="user-info">
         <h4 class="username">{{ comment.user.name }}</h4>
+        <div class="comment-content">
+          <p>{{ comment.text }}</p>
+        </div>
         <p class="comment-time">{{ formatDate(comment.date) }}</p>
       </div>
-    </div>
-    <div class="comment-content">
-      <p>{{ comment.text }}</p>
     </div>
     <div class="replies" v-if="comment.thread.items && comment.thread.items.length">
       <Comment v-for="reply in comment.thread.items" :key="reply.id" :comment="reply" />
@@ -39,7 +39,6 @@ export default {
 
 <style scoped>
 .comment {
-  border-bottom: 1px solid #ccc;
   padding: 8px;
   margin-bottom: 8px;
 }
@@ -59,6 +58,7 @@ export default {
 .user-info {
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid #ccc;
 }
 
 .username {
@@ -72,7 +72,8 @@ export default {
 }
 
 .comment-content {
-  margin-top: 8px;
+  margin: 0;
+  flex-shrink: 1;
 }
 
 .comment-actions {
