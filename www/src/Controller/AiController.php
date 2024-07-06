@@ -52,7 +52,7 @@ final class AiController extends BaseController
 		return $this->json(['status' => 'ok']);
 	}
 
-	#[Route(path: "/api/v1/analytic/generate", name: "app_ai_analytic", methods: ["POST"])]
+	#[Route(path: "/api/v1/analytic/generate", name: "app_ai_analytic_gen", methods: ["POST"])]
 	#[OA\RequestBody(
 		description: "Create a new group",
 		required: true,
@@ -141,7 +141,7 @@ final class AiController extends BaseController
 		);
 	}
 
-	#[Route(path: "/api/v1/analytic/generate/image", name: "app_ai_analytic", methods: ["POST"])]
+	#[Route(path: "/api/v1/analytic/generate/image", name: "app_ai_analytic_img", methods: ["POST"])]
 	#[OA\RequestBody(
 		description: "Create a new group",
 		required: true,
