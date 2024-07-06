@@ -106,7 +106,10 @@ class VkontakteAuthenticator extends OAuth2Authenticator implements Authenticati
 	{
 		// change "app_homepage" to some route in your app
 		$targetUrl = $this->router->generate('app_index');
-		$this->getSession()->set('access_token', $token->getUser()->getUserIdentifier());
+		$existingUser =
+			$this->entityManager->getRepository(User::class)->findOneBy(['vkId' => $token->getUserIdentifier()]);
+
+		$this->getSession()->set('access_token', $existingUser->getAccessToken());
 
 		return new RedirectResponse($targetUrl);
 	}
