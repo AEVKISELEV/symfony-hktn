@@ -4,7 +4,11 @@ namespace App\Contract;
 
 class OpenAIGeneralMessage implements RabbitMQMessage
 {
-	private string $messageText;
+	public function __construct(
+		private string $messageText,
+	)
+	{
+	}
 
 	public function toString(): string
 	{
