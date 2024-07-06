@@ -29,8 +29,14 @@ class RabbitMQProducerService
 
     public function sendMessage(RabbitMQMessage $message, string $queueName): void
     {
-        $this->channel->queue_declare($queueName, false, true, false, false);
-
+		try {
+			// Check if the queue exists
+			$this->channel->queue_declare($queueName, true, true, false, false);
+		} catch (Exception $e) {
+			// If the queue does not exist, declare it
+			$this->channel->queue_declare($queueName, false, true, false, false);
+		}
+		
         $msg = new AMQPMessage($message->toString(), ['delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]);
         $this->channel->basic_publish($msg, '', $queueName);
 
