@@ -17,12 +17,11 @@ class GenerateResult
 	#[ORM\Column(type: Types::BIGINT)]
 	private int $id;
 
-	#[ORM\ManyToOne(targetEntity: Post::class)]
-	#[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false)]
-	public Post $post;
+	#[ORM\Column(type: Types::TEXT)]
+	public string $vkPostId;
 
-	#[ORM\Column(type: Types::STRING, length: 200, nullable: true)]
-	public ?string $content = null;
+	#[ORM\Column(type: Types::STRING, length: 200)]
+	public string $content;
 
 	#[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, updatable: false)]
 	public DateTimeImmutable $dateCreate;

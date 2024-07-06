@@ -11,14 +11,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CommentController extends BaseController
 {
 	#[Route(path: "/api/v1/comments/{postId}", name: "app_comments", methods: ["GET"])]
-	public function commentsList(int $postId, CommentRepository $commentRepository, PostRepository $postRepository): Response
+	public function commentsList(int $postId): Response
 	{
-		$post = $postRepository->find($postId);
-		if ($post === null)
-		{
-			return $this->jsonResponseWithError("Has no post by id");
-		}
-
 		$comments = [
 			[
 				'id' => 1,

@@ -11,15 +11,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class GroupController extends BaseController
 {
-	private VkApiConnector $vkApiConnector;
-	public function __construct(VkApiConnector $vkApiConnector)
-	{
-		$this->vkApiConnector = $vkApiConnector;
-	}
 	#[Route(path: "/api/v1/groups", name: "app_groups_list", methods: "GET")]
-	public function groupsList(): Response
+	public function groupsList(VkApiConnector $vkApiConnector): Response
 	{
-		$groups = $this->vkApiConnector->getGroups();
+		$groups = $vkApiConnector->getGroups();
 
 		$result = [
 			[
