@@ -3,10 +3,16 @@
     <!-- Add your header content here -->
   </header>
   <div class="group-page-wrapper">
-    <section class="group-page group-list"></section>
+    <section class="group-page group-list">
+      <GroupList />
+    </section>
     <section class="group-page comment-list"></section>
   </div>
 </template>
+
+<script setup>
+  import GroupList from './groups/GroupList.vue';
+</script>
 
 <style scoped>
 body {
