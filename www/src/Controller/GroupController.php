@@ -73,7 +73,11 @@ final class GroupController extends AbstractController
 	public function createGroup(Request $request): Response
 	{
 		$data = json_decode($request->getContent(), true);
-		$link = $data['link'] ?? throw new Exception("HAS NO LINK");
+		$link = $data['link'] ?? null;
+		if ($link === null)
+		{
+			return $this->json(['success' => false, 'error' => 'has no link msf']);
+		}
 
 		return $this->json(
 			[
