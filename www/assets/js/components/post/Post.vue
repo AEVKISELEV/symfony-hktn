@@ -12,11 +12,7 @@
         <img v-for="(image, index) in post.images" :key="index" :src="image" alt="Post Image" class="post-image" />
       </div>
     </div>
-    <div class="post-actions">
-      <div>Нравится: {{ post.likes.count }}</div>
-      <div>Комментарии: {{ post.comments.count }}</div>
-    </div>
-    <CommentList :comments="comments" :profiles="profiles" @reply-to-comment="handleReplyToComment" />
+
   </div>
 </template>
 
@@ -64,17 +60,16 @@ export default {
 
 <style scoped>
 .single-post {
-border: 1px solid #ccc;
 padding: 16px;
 margin-bottom: 16px;
 border-radius: 8px;
-background-color: #F9F9F9;;
   font-family: Roboto,serif;
   font-size: 18px;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 1px;
   text-align: left;
+  background: #FFFFFF;
 }
 
 .post-header {

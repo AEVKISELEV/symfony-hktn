@@ -30,6 +30,8 @@ export default {
 <style scoped>
 .comment-list {
   margin-top: 16px;
+  border-radius: 8px;
+  background: #FFFFFF;
 }
 
 .comment-list h3 {
