@@ -1,7 +1,8 @@
 package ai
 
 const (
-	TypeText = "TEXT"
+	TypeText    = "TEXT"
+	TypePicture = "IMAGE"
 )
 
 type CallbackResponse struct {

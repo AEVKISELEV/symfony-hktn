@@ -20,7 +20,8 @@ type Service struct {
 	rabbit *rabbit.Rabbit
 
 	// generators
-	aiText *ai.TextGenerator
+	aiText    *ai.TextGenerator
+	aiPicture *ai.PictureGenerator
 }
 
 type Config struct {
@@ -65,6 +66,8 @@ func Start() error {
 		return fmt.Errorf("cannot create ai text generator: %w", err)
 	}
 
+	s.aiPicture, err = ai.NewPictureGenerator(s.config.AITextConfig.OpenAIToken, "http://host.docker.internal/api/v1/ai/generate", s.logger)
+
 	err = s.Listen()
 	if err != nil {
 		return fmt.Errorf("cannot start listening: %w", err)
@@ -108,6 +111,12 @@ func (s *Service) handleAnalysis(d amqp.Delivery) error {
 		err = util.ParseJSONData(data.Content, &textData)
 		if err == nil {
 			return s.aiText.GenerateText(data.ID, textData)
+		}
+	case ai.TypePicture:
+		var pictureData ai.PictureData
+		err = util.ParseJSONData(data.Content, &pictureData)
+		if err == nil {
+			return s.aiPicture.GenerateImage(data.ID, pictureData)
 		}
 	default:
 		err = fmt.Errorf("unknown type '%s'", data.Type)
