@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -15,14 +16,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 	#[ORM\Column(unique: true)]
 	public ?int $vkId = null;
 
-	#[ORM\Column(nullable: true)]
+	#[ORM\Column(type: Types::STRING, nullable: true)]
 	public ?string $photo = null;
 
-	#[ORM\Column(length: 180)]
+	#[ORM\Column(type: Types::STRING, length: 180)]
 	private string $firstname;
 
-	#[ORM\Column(length: 180, nullable: true)]
+	#[ORM\Column(type: Types::STRING, length: 180, nullable: true)]
 	private ?string $lastname = null;
+
+	#[ORM\Column(type: Types::STRING, length: 180, nullable: true)]
+	private ?string $refreshToken = null;
+
+	#[ORM\Column(type: Types::STRING, length: 180, nullable: true)]
+	private ?string $accessToken = null;
 
 	#[ORM\Column]
 	private array $roles = [];
