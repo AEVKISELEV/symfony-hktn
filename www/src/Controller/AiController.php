@@ -15,6 +15,16 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AiController extends BaseController
 {
 	#[Route(path: "/api/v1/ai/generate", name: "app_ai_generate", methods: ["POST"])]
+	#[OA\RequestBody(
+		required: true,
+		content: new OA\JsonContent(
+			properties: [
+							new OA\Property(property: "id", type: "string"),
+							new OA\Property(property: "content", type: "string"),
+						],
+			type:       "object",
+		)
+	)]
 	public function set(
 		Request $request,
 		GenerateResultRepository $generateResultRepository,
