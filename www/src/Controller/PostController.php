@@ -15,4 +15,9 @@ final class PostController extends BaseController
 	{
 		return $this->json($vkApiConnector->getPosts($groupId));
 	}
+	#[Route(path: "/api/v1/posts/{groupId}/{postId}", name: "app_post", methods: ["GET"])]
+	public function getPost(string $groupId, int $postId, VkApiConnector $vkApiConnector): Response
+	{
+		return $this->json($vkApiConnector->getPost($groupId, $postId));
+	}
 }

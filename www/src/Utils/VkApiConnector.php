@@ -49,6 +49,18 @@ class VkApiConnector
 			);
 	}
 
+	public function getPost(string $groupId, string $postId): array
+	{
+		return
+			$this->apiClient->wall()->getById(
+				$this->requestStack->getSession()->get('access_token'),
+				[
+					'posts' => $groupId.'_'.$postId,
+					'extended' => 1,
+				]
+			);
+	}
+
 	public function getComments(string $groupId, int $postId, int $count = 100): array
 	{
 		return
