@@ -18,12 +18,17 @@ class GenerateResult
 
 	#[ORM\Column(type: Types::TEXT)]
 	public string $vkPostId;
+	#[ORM\Column(type: Types::TEXT)]
+	public string $vkGroupId;
 
 	#[ORM\Column(type: Types::TEXT)]
 	public string $content;
 
 	#[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, updatable: false)]
 	public DateTimeImmutable $dateCreate;
+
+	#[ORM\Column(type: Types::TEXT)]
+	public string $type = 'general';
 
 	public function getId(): int
 	{
