@@ -2,7 +2,6 @@
 
 namespace App\Entity\Ai\Post\Analytic;
 
-use App\Entity\Post;
 use App\Repository\Ai\Post\Analytic\GenerateResultRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
