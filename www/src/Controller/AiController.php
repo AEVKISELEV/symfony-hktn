@@ -107,7 +107,7 @@ final class AiController extends BaseController
 			$commentsMe[] = [
 				'username' => $user_profile['first_name'] . ' ' . $user_profile['last_name'],
 				'text' => $comment['text'],
-				'likes' => 0,
+				'likes' => $comment['likes']['count'] ?? 0,
 				'attachments' => [],
 			];
 		}
@@ -126,7 +126,7 @@ final class AiController extends BaseController
 			],
 		];
 
-		$producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message)), 'analysis');
+		// $producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message)), 'analysis');
 
 		return $this->json(
 			[
