@@ -8,9 +8,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CommentController extends BaseController
 {
-	#[Route(path: "/api/v1/comments/{postId}", name: "app_comments", methods: ["GET"])]
-	public function commentsList(int $postId): Response
+	#[Route(path: "/api/v1/comments/{groupId}/{postId}", name: "app_comments", methods: ["GET"])]
+	public function commentsList(string $groupId, int $postId, VkApiConnector $vkApiConnector): Response
 	{
+
+		return $this->json($vkApiConnector->getComments($groupId, $postId));
 		$comments = [
 			[
 				'id' => 1,

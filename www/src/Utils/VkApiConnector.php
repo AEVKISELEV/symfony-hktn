@@ -3,7 +3,6 @@
 namespace App\Utils;
 
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use VK\Client\VKApiClient;
 
@@ -34,8 +33,35 @@ class VkApiConnector
 						->getUser()
 						->getUserIdentifier(),
 					'extended' => 1,
-					'filter' => 'moder'
+					'filter' => 'moder',
 				],
+			);
+	}
+
+	public function getPosts(string $groupId, int $count = 100): array
+	{
+		return
+			$this->apiClient->wall()->get(
+				$this->requestStack->getSession()->get('access_token'),
+				[
+					'owner_id' => $groupId,
+					'count' => $count,
+					'extended' => 1,
+				]
+			);
+	}
+
+	public function getComments(string $groupId, int $postId, int $count = 100): array
+	{
+		return
+			$this->apiClient->wall()->getComments(
+				$this->requestStack->getSession()->get('access_token'),
+				[
+					'owner_id' => $groupId,
+					'post_id' => $postId,
+					'count' => $count,
+					'extended' => 1,
+				]
 			);
 	}
 }

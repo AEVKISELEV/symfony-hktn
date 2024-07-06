@@ -51,7 +51,7 @@ class VkProvider extends AbstractProvider
 
 	protected function getDefaultScopes()
 	{
-		return ['email', 'groups'];
+		return ['email', 'groups', 'wall'];
 	}
 
 	protected function checkResponse(ResponseInterface $response, $data)

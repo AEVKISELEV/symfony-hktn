@@ -21,7 +21,20 @@ class VKController extends AbstractController
 	}
 
 	#[\Symfony\Component\Routing\Attribute\Route("/connect/vk", 'connect_vk_start', methods: ['GET'])]
-	public function connectLifeHackerAction(Request $request)
+	public function connectAction(Request $request)
+	{
+		/**
+		 * @var VkProvider $provider
+		 */
+		return $this
+			->clientRegistry
+			->getClient('vkontakte')
+			->redirect()
+		;
+	}
+
+	#[\Symfony\Component\Routing\Attribute\Route("/connect/v/{groupId}", 'connect_vk_start', methods: ['GET'])]
+	public function connectLifeHackerAction(int $groupId, Request $request)
 	{
 		/**
 		 * @var VkProvider $provider
