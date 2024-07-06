@@ -2,15 +2,24 @@ import {createApp} from 'vue';
 import {createRouter, createWebHistory} from 'vue-router'
 import App from './components/App.vue';
 import Main from './components/Main.vue';
+import Auth from './components/auth/Auth.vue'
+import PostPage from './components/post/PostPage.vue';
 
 const router = createRouter({
 	routes: [
+		{
+			path: '/auth',
+			component: Auth
+		},
+		{
+			path: '/post/:id',
+			component: PostPage
+		},
 		{
 			path: '/groups',
 			component: Main
 		},
 	],
-
 	history: createWebHistory()
 })
 

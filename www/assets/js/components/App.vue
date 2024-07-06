@@ -3,7 +3,8 @@
     <div v-if="isVisible" id="app">
       <nav>
         <button @click="goToGroups">Go to Groups</button>
-      </nav>
+      <button @click="goToPost">Go to Post</button>
+    </nav>
     </div>
     <router-view/>
   </div>
@@ -21,6 +22,9 @@ export default {
     goToGroups() {
       this.isVisible = false;
       this.$router.push('/groups');
+    },
+    goToPost() {
+      this.$router.push('/post/1');
     }
   }
 };
