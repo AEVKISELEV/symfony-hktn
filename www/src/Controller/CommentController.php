@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\CommentRepository;
-use App\Repository\PostRepository;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
