@@ -3,35 +3,6 @@ nelmio_api_doc:
         info:
             title: Undefined Team API
             version: 3.0.0
-        paths:
-            /api/v1/token/refresh:
-                post:
-                    summary: 'Refresh JWT token'
-                    requestBody:
-                        content:
-                            application/json:
-                                schema:
-                                    type: object
-                                    properties:
-                                        refresh_token:
-                                            type: string
-                                            example: 'your_current_refresh_token'
-                    responses:
-                        '200':
-                            description: 'New JWT token'
-                            content:
-                                application/json:
-                                    schema:
-                                        type: object
-                                        properties:
-                                            token:
-                                                type: string
-                                                example: 'access_token'
-                                            refresh_token:
-                                                type: string
-                                                example: 'refresh_token'
-                        '401':
-                            description: 'JWT Refresh Token Not Found'
     areas:
         path_patterns:
             - ^/api(?!/doc$)
