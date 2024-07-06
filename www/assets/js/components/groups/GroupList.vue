@@ -1,61 +1,30 @@
 <script setup>
-const items = [
-  {
-    id: 1,
-    title: 'Музыка и клипы',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 2,
-    title: 'Новости IT и технологий',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 3,
-    title: 'Путешествия по миру',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 4,
-    title: 'Рецепты и кулинария',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 5,
-    title: 'Фильмы и сериалы',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 6,
-    title: 'Здоровье и фитнес',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 7,
-    title: 'Автомобили и мотоциклы',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 8,
-    title: 'Юмор и развлечения',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 9,
-    title: 'Фотография и искусство',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 10,
-    title: 'Наука и образование',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-];
+import {ref, onMounted} from 'vue';
+import axios from 'axios';
+
+const items = ref([]);
 
 const user = {
   name: 'Иван Иванов',
   avatar: 'https://via.placeholder.com/100', // Замените на URL вашей аватарки
 };
+
+const fetchGroups = async () => {
+  try {
+    const response = await axios.get('/api/v1/groups');
+    items.value = response.data.items.map(group => ({
+      id: group.id,
+      title: group.name,
+      image: group.photo_200, // Используем фото 200px
+    }));
+  } catch (error) {
+    console.error('Ошибка при получении данных:', error);
+  }
+};
+
+onMounted(() => {
+  fetchGroups();
+});
 </script>
 
 <template>
