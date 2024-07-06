@@ -18,9 +18,9 @@ func ProxyAwareHttpClient() (*http.Client, error) {
 	if isSet {
 		proxyUrl, err := url.Parse(proxyServer)
 		if err != nil {
-			return nil, fmt.Errorf("cannot create proxy: %w", err)
+			return nil, fmt.Errorf("cannot parse url")
 		}
-		dialer, err = proxy.FromURL(proxyUrl, proxy.Direct)
+		return &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}, nil
 	}
 
 	// setup a http client
