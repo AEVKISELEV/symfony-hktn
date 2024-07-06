@@ -50,7 +50,10 @@ final class AiController extends BaseController
 		description: "Create a new group",
 		required: true,
 		content: new OA\JsonContent(
-			properties: [new OA\Property(property: "postId", type: "string", description: "The link for the group")],
+			properties: [
+							new OA\Property(property: "postId", type: "string"),
+							new OA\Property(property: "groupId", type: "string"),
+						],
 			type: "object",
 		)
 	)]
@@ -67,7 +70,6 @@ final class AiController extends BaseController
 	)]
 	public function send(
 		Request $request,
-		GenerateResultRepository $generateResultRepository,
 	): Response
 	{
 		$jsonka = json_decode($request->getContent());
@@ -88,6 +90,11 @@ final class AiController extends BaseController
 	{
 		$generateResult = $generateResultRepository->find($postId);
 
-		return $this->json(['status' => 'ok', 'data' => ['content' => $generateResult?->content, 'dateCreate' => $generateResult?->dateCreate]]);
+		return $this->json(
+			[
+				'status' => 'ok',
+				'data' => ['content' => $generateResult?->content, 'dateCreate' => $generateResult?->dateCreate],
+			],
+		);
 	}
 }
