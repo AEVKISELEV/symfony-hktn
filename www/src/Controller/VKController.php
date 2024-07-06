@@ -57,7 +57,6 @@ class VKController extends AbstractController
 			$this->auth($existingUser, $eventDispatcher, $tokenStorage, $requestStack, $request);
 			return $this->redirect("/");
 		}
-
 		$user = new User();
 
 		$user->setVkId(265055656);
