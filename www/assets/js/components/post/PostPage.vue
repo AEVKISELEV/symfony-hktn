@@ -1,7 +1,7 @@
 <template>
   <div className="single-post-page">
-    <h1>Post Details</h1>
     <Post v-if="post" :post="post" @like-post="handleLikePost" @comment-post="handleCommentPost"/>
+    <CommentList v-if="comments.length" :comments="comments" @reply-to-comment="handleReplyToComment"/>
   </div>
 </template>
 
@@ -18,36 +18,62 @@ export default {
   },
   data() {
     return {
-      post: {
-        id: 1,
-        user: {
-          name: 'John Doe',
-          avatar: 'https://via.placeholder.com/50'
-        },
-        content: 'This is a detailed post content with images.',
-        images: [
-          'https://via.placeholder.com/400x400',
-          'https://via.placeholder.com/400x400',
-          'https://via.placeholder.com/400x400'
-        ],
-        likes: 10,
-      },
+      post: null,
+      comments: []
     };
   },
   methods: {
     fetchPost() {
-      const postId = this.$route.params.id;
-      axios.get(`http://localhost/api/v1/post/${postId}`)
+      const groupId = this.$route.params.groupId;
+      const postId = this.$route.params.postId;
+      axios.get(`/api/v1/posts/${groupId}/${postId}`)
           .then(response => {
-            this.post = response.data;
+            const { items, profiles, groups } = response.data;
+            const post = items[0];
+
+            this.post = {
+              ...post,
+              icon: groups[0].photo_50,
+              title: groups[0].name,
+            };
+
+            this.fetchComments(groupId, postId);
           })
           .catch(error => {
             console.error('Error fetching post:', error);
           });
     },
+    fetchComments(groupId, postId) {
+      axios.get(`/api/v1/comments/${groupId}/${postId}`)
+          .then(response => {
+            const { items, profiles, groups } = response.data;
+            const profileMap = profiles.reduce((map, profile) => {
+              map[profile.id] = profile;
+              return map;
+            }, {});
+            const groupMap = groups.reduce((map, group) => {
+              map[group.id] = group;
+              return map;
+            }, {});
+
+            this.comments = items.map(comment => {
+              const author = profileMap[comment.from_id] || groupMap[comment.owner_id];
+              return {
+                ...comment,
+                user: {
+                  name: author.first_name ? `${author.first_name} ${author.last_name}` : author.name,
+                  avatar: author.photo_50 || 'https://via.placeholder.com/40'
+                }
+              };
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching comments:', error);
+          });
+    },
     handleLikePost(postId) {
       if (this.post.id === postId) {
-        this.post.likes += 1;
+        this.post.likes.count += 1;
       }
     },
     handleCommentPost(postId) {
@@ -60,7 +86,7 @@ export default {
     }
   },
   watch: {
-    '$route.params.id': 'fetchPost'
+    '$route.params.postId': 'fetchPost'
   },
   mounted() {
     this.fetchPost();
@@ -70,10 +96,10 @@ export default {
 
 <style scoped>
 .single-post-page {
-padding: 16px;
+  padding: 16px;
 }
 
 .single-post-page h1 {
-margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 </style>

@@ -12,8 +12,8 @@ const router = createRouter({
 			component: Auth
 		},
 		{
-			path: '/post/:id',
-			component: PostPage
+			path: '/post/:groupId/:postId',
+			component: Main
 		},
 		{
 			path: '/groups',

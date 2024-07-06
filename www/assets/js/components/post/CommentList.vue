@@ -1,6 +1,5 @@
 <template>
   <div className="comment-list">
-    <h3>Comments</h3>
     <Comment v-for="comment in comments" :key="comment.id" :comment="comment" @reply-to-comment="handleReplyToComment"/>
   </div>
 </template>

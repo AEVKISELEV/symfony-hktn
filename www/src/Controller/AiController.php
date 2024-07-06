@@ -21,9 +21,9 @@ final class AiController extends BaseController
 	): Response
 	{
 		$jsonka = json_decode($request->getContent());
-		$postId = (int)($jsonka['id'] ?? 0);
+		$id = (string)($jsonka['id'] ?? 0);
 		$content = (string)($jsonka['content'] ?? '');
-		if (!$postId)
+		if (!$id)
 		{
 			return $this->jsonResponseWithError('has no post by id');
 		}
@@ -31,9 +31,13 @@ final class AiController extends BaseController
 		{
 			return $this->json(['status' => 'error', 'message' => 'contentIsEmpty'], 400);
 		}
+
+		[$postId, $groupId, $type] = explode('.', $id);
 		$generateResult = new GenerateResult();
 		$generateResult->content = $content;
 		$generateResult->vkPostId = $postId;
+		$generateResult->vkGroupId = $groupId;
+		$generateResult->type = $type;
 		$generateResult->dateCreate = new \DateTimeImmutable();
 
 		try
@@ -107,7 +111,7 @@ final class AiController extends BaseController
 			$commentsMe[] = [
 				'username' => $user_profile['first_name'] . ' ' . $user_profile['last_name'],
 				'text' => $comment['text'],
-				'likes' => 0,
+				'likes' => $comment['likes']['count'] ?? 0,
 				'attachments' => [],
 			];
 		}
@@ -115,7 +119,7 @@ final class AiController extends BaseController
 		$post = $post['items'][0];
 		$message = [
 			'type' => "TEXT",
-			'id' => $postId,
+			'id' => $postId . '.' . $groupId . '.' . GenerateResult::GENERAL,
 			'content' => [
 				'post' => [
 					'text' => $post['text'],
@@ -138,18 +142,24 @@ final class AiController extends BaseController
 
 	}
 
-	#[Route(path: "/api/v1/analytic/{postId}", name: "app_ai_analytic_by_post", methods: ["get"])]
+	#[Route(path: "/api/v1/analytic/{postId}/{groupId}", name: "app_ai_analytic_by_post", methods: ["get"])]
 	public function get(
-		int $postId,
+		string $postId,
+		string $groupId,
 		GenerateResultRepository $generateResultRepository,
 	): Response
 	{
-		$generateResult = $generateResultRepository->find($postId);
+		$generateResult = $generateResultRepository->findBy(['vkPostId' => $postId, 'vkGroupId' => $groupId]);
+		$res = [];
+		foreach ($generateResult as $item)
+		{
+			$res[] = ['content' => $item->content, 'dateCreate' => $item->dateCreate];
+		}
 
 		return $this->json(
 			[
 				'status' => 'ok',
-				'data' => ['content' => $generateResult?->content, 'dateCreate' => $generateResult?->dateCreate],
+				'data' => $res,
 			],
 		);
 	}
