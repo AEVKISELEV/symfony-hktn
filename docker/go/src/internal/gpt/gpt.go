@@ -15,13 +15,7 @@ type Assistant struct {
 	thread *openai.Thread
 }
 
-func NewAssistant(token, prepromt, model string) (*Assistant, error) {
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
-	defer cancel()
-
-	assistantName := "assistant"
-
+func createOpenAIClient(token string) (*openai.Client, error) {
 	clientConfig := openai.DefaultConfig(token)
 
 	var err error
@@ -29,7 +23,20 @@ func NewAssistant(token, prepromt, model string) (*Assistant, error) {
 	if err != nil {
 		return nil, fmt.Errorf("cannot create proxy client: %w", err)
 	}
-	client := openai.NewClientWithConfig(clientConfig)
+
+	return openai.NewClientWithConfig(clientConfig), nil
+}
+func NewAssistant(token, prepromt, model string) (*Assistant, error) {
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	assistantName := "assistant"
+
+	client, err := createOpenAIClient(token)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create openai client: %w", err)
+	}
 
 	assistant, err := initAssistant(client, assistantName, prepromt, model)
 	if err != nil {
@@ -115,4 +122,36 @@ func (a *Assistant) getThread(ctx context.Context) (openai.Thread, error) {
 
 	a.thread = &thread
 	return thread, nil
+}
+
+// PICTURE SECTION
+
+type PictureGenerator struct {
+	client *openai.Client
+}
+
+func NewPictureGenerator(token string) (*PictureGenerator, error) {
+	client, err := createOpenAIClient(token)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create openai client: %w", err)
+	}
+
+	return &PictureGenerator{client: client}, nil
+}
+
+func (pg *PictureGenerator) GeneratePicture(ctx context.Context, prompt string, imageSize string) (string, error) {
+	reqUrl := openai.ImageRequest{
+		Prompt:         prompt,
+		Size:           imageSize,
+		ResponseFormat: openai.CreateImageResponseFormatURL,
+		Model:          openai.CreateImageModelDallE3,
+		N:              1,
+	}
+
+	respUrl, err := pg.client.CreateImage(ctx, reqUrl)
+	if err != nil {
+		return "", fmt.Errorf("cannot create image: %w", err)
+	}
+
+	return respUrl.Data[0].URL, nil
 }
