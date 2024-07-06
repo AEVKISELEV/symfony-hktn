@@ -1,61 +1,73 @@
-<script setup>
-const items = [
-  {
-    id: 1,
-    title: 'Музыка и клипы',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 2,
-    title: 'Новости IT и технологий',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 3,
-    title: 'Путешествия по миру',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 4,
-    title: 'Рецепты и кулинария',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 5,
-    title: 'Фильмы и сериалы',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 6,
-    title: 'Здоровье и фитнес',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 7,
-    title: 'Автомобили и мотоциклы',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 8,
-    title: 'Юмор и развлечения',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 9,
-    title: 'Фотография и искусство',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-  {
-    id: 10,
-    title: 'Наука и образование',
-    image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
-  },
-];
-
-const user = {
-  name: 'Иван Иванов',
-  avatar: 'https://via.placeholder.com/100', // Замените на URL вашей аватарки
+<script>
+export default {
+	name: 'GroupList',
+	data() {
+		return {
+			user: {
+				name: 'Иван Иванов',
+				avatar: 'https://via.placeholder.com/100', // Замените на URL вашей аватарки
+			},
+			items: [
+				{
+					id: 1,
+					title: 'Музыка и клипы',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 2,
+					title: 'Новости IT и технологий',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 3,
+					title: 'Путешествия по миру',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 4,
+					title: 'Рецепты и кулинария',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 5,
+					title: 'Фильмы и сериалы',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 6,
+					title: 'Здоровье и фитнес',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 7,
+					title: 'Автомобили и мотоциклы',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 8,
+					title: 'Юмор и развлечения',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 9,
+					title: 'Фотография и искусство',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+				{
+					id: 10,
+					title: 'Наука и образование',
+					image: 'https://via.placeholder.com/150', // Замените на URL вашей картинки
+				},
+			]
+		};
+	},
+	methods: {
+		handleClick(id) {
+			this.$emit('selectGroup', id);
+		}
+	}
 };
+
 </script>
 
 <template>
@@ -64,7 +76,7 @@ const user = {
     <span class="user-name">{{ user.name }}</span>
   </div>
   <div class="grid-container">
-    <div v-for="item in items" :key="item.id" class="grid-item">
+    <div v-for="item in items" :key="item.id" class="grid-item" @click="handleClick(item.id)">
       <img :src="item.image" alt="Item Image" class="item-image"/>
       <h3>{{ item.title }}</h3>
     </div>
