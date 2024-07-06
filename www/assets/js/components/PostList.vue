@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<component :is="currentComponent" :groupId="selectedGroup"/>
+		<component :is="currentComponent" :groupId="selectedGroup" @selectPost="selectPost" />
 	</div>
 </template>
 
@@ -17,6 +17,9 @@ export default {
 	},
 	methods: {
 		selectPost(id) {
+
+      console.log('PostList');
+      console.log(id);
 			this.$emit('selectPost', id);
 		}
 	},

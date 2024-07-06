@@ -4,6 +4,7 @@ import App from './components/App.vue';
 import Main from './components/Main.vue';
 import Auth from './components/auth/Auth.vue'
 import PostPage from './components/post/PostPage.vue';
+import Analytic from "./components/analytic/Analytic.vue";
 
 const router = createRouter({
 	routes: [
@@ -18,6 +19,10 @@ const router = createRouter({
 		{
 			path: '/groups',
 			component: Main
+		},
+		{
+			path: '/analytics/:groupId/:postId',
+			component: Analytic
 		},
 	],
 	history: createWebHistory()

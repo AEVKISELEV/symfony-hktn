@@ -1,14 +1,14 @@
 <template>
   <div class="single-post-page">
+    <button @click="goToAnal" class="generate-btn">
+      Сгенерить
+    </button>
     <Post v-if="post" :post="post" @like-post="handleLikePost" @comment-post="handleCommentPost"/>
     <div class="post-actions">
       <div>Нравится: {{ post?.likes.count }}</div>
       <div>Комментарии: {{ post?.comments.count }}</div>
     </div>
     <CommentList v-if="comments.length" :comments="comments" @reply-to-comment="handleReplyToComment"/>
-    <button @click="goToAnal" class="generate-btn">
-      Сгенерить
-    </button>
   </div>
 </template>
 
@@ -116,7 +116,6 @@ export default {
 }
 
 .generate-btn {
-  position: absolute;
   color: #FFF;
   text-align: center;
   font-family: Roboto,sans-serif;
@@ -133,5 +132,6 @@ export default {
   border-radius: 8px;
   background: #5A7BB0;
   border: none;
+  margin-bottom: 30px;
 }
 </style>

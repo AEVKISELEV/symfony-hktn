@@ -4,7 +4,7 @@
   </header>
   <div class="group-page-wrapper">
     <section class="group-page group-list">
-			<component :is="leftComponent" :postId="selectedPost" @selectGroup="selectGroup"/>
+			<PostPage/>
     </section>
     <section class="group-page comment-list">
 			<PostList @selectPost="selectPost" :selectedGroup="selectedGroup" />

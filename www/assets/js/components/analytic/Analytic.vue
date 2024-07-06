@@ -28,13 +28,16 @@ const data = ref([]);
 const fetchAnalytics = async () => {
   const postId = route.params.postId;
   const groupId = route.params.groupId;
-  try {
-    const response = await axios.get(`/api/v1/analytic/${postId}/${groupId}`);
-    status.value = response.data.status;
-    data.value = response.data.data;
-  } catch (error) {
-    console.error('Ошибка при получении данных:', error);
-  }
+
+    axios.post(`/api/v1/analytic/generate`, {
+      postId, groupId,
+    });
+
+    setInterval(async () => {
+      const response = await axios.get(`/api/v1/analytic/${postId}/${groupId}`);
+      status.value = response.data.status;
+      data.value = response.data.data;
+    }, 100)
 };
 
 onMounted(() => {
