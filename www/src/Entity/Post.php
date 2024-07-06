@@ -10,23 +10,27 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GroupRepository::class)]
-#[ORM\Table(name: '`app_group`')]
-class Group
+#[ORM\Table(name: '`app_post`')]
+class Post
 {
-	#[ORM\Column(type: Types::STRING, length: 50)]
+	#[ORM\Column(type: Types::STRING, length: 150)]
 	#[Assert\Length(min: 2, max: 50)]
 	public string $title;
+	#[ORM\Column(type: Types::STRING, length: 150)]
+	public string $author;
 	public File $image;
 	#[ORM\Column(type: Types::STRING, length: 150, unique: true)]
 	public string $vkId;
 	#[ORM\Column(type: Types::STRING, length: 200, nullable: true)]
-	public ?string $description = null;
+	public ?string $content = null;
 	#[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, updatable: false)]
-	public DateTimeImmutable $createDateTime;
+	public DateTimeImmutable $dateCreate;
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column(type: Types::BIGINT)]
 	private int $id;
+	#[ORM\Column(type: Types::BIGINT)]
+	private int $likesAmount;
 
 	public function getId(): int
 	{
