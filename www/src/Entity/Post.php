@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\GroupRepository;
+use App\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: GroupRepository::class)]
+#[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\Table(name: '`app_post`')]
 class Post
 {
