@@ -3,14 +3,17 @@ package service
 import (
 	"fmt"
 	"github.com/AEVKISELEV/symfony-hktn/internal/logger"
+	"github.com/AEVKISELEV/symfony-hktn/internal/rabbit"
 	"go.uber.org/zap"
 	"os"
 	"strconv"
 )
 
 type Service struct {
-	logger *zap.Logger
 	config Config
+
+	logger *zap.Logger
+	rabbit *rabbit.Rabbit
 }
 
 type Config struct {
@@ -29,15 +32,47 @@ func (rc RabbitConfig) Address() string {
 	return fmt.Sprintf("amqp://%s:%s@%s:%d", rc.Username, rc.Password, rc.Host, rc.Port)
 }
 
-func readConfig() (Config, error) {
+func Start() error {
+	s := Service{}
+	var err error
 
-	rabbit, err := readRabbitConfig()
+	s.logger, err = logger.BuildLogger()
+	if err != nil {
+		return fmt.Errorf("cannot build logger: %w", err)
+	}
+
+	s.config, err = readConfig()
+	if err != nil {
+		return fmt.Errorf("cannot read config: %w", err)
+	}
+
+	s.rabbit, err = rabbit.New(s.config.RabbitConfig.Address())
+	if err != nil {
+		return fmt.Errorf("cannot create rabbit instance")
+	}
+
+	err = s.Listen()
+	if err != nil {
+		return fmt.Errorf("cannot start listening: %w", err)
+	}
+
+	return nil
+}
+
+func (s *Service) Listen() error {
+	s.logger.Info("Service start listening")
+
+	return nil
+}
+
+func readConfig() (Config, error) {
+	rabbitCfg, err := readRabbitConfig()
 	if err != nil {
 		return Config{}, fmt.Errorf("cannot read rabbit config: %w", err)
 	}
 
 	return Config{
-		RabbitConfig: rabbit,
+		RabbitConfig: rabbitCfg,
 	}, nil
 }
 
@@ -84,23 +119,4 @@ func readRabbitConfig() (RabbitConfig, error) {
 		Port:      portInt,
 		AdminPort: adminPortInt,
 	}, nil
-}
-
-func Start() error {
-	s := Service{}
-	var err error
-
-	s.logger, err = logger.BuildLogger()
-	if err != nil {
-		return fmt.Errorf("cannot build logger: %w", err)
-	}
-
-	s.config, err = readConfig()
-	if err != nil {
-		return fmt.Errorf("cannot read config: %w", err)
-	}
-
-	s.logger.Info("Service started")
-
-	return nil
 }
