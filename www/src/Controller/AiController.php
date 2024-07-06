@@ -15,18 +15,15 @@ final class AiController extends BaseController
 	#[Route(path: "/api/v1/ai/generate", name: "app_ai_generate", methods: ["POST"])]
 	public function set(
 		Request $request,
-		PostRepository $postRepository,
 		GenerateResultRepository $generateResultRepository,
 	): Response
 	{
 		$jsonka = json_decode($request->getContent());
 		$postId = (int)($jsonka['id'] ?? 0);
 		$content = (string)($jsonka['content'] ?? '');
-
-		$post = $postRepository->find($postId);
-		if ($post === null)
+		if (!$postId)
 		{
-			return $this->json(['status' => 'error', 'message' => 'postNotFound'], 400);
+			return $this->jsonResponseWithError('has no post by id');
 		}
 		if ($content === '')
 		{
@@ -34,7 +31,7 @@ final class AiController extends BaseController
 		}
 		$generateResult = new GenerateResult();
 		$generateResult->content = $content;
-		$generateResult->post = $post;
+		$generateResult->vkPostId = $postId;
 		$generateResult->dateCreate = new \DateTimeImmutable();
 
 		try
