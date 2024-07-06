@@ -28,10 +28,8 @@ class VkApiConnector
 			$this->apiClient->groups()->get(
 				$this->requestStack->getSession()->get('access_token'),
 				[
-					'user_id' => $this->tokenStorage
-						->getToken()
-						->getUser()
-						->getUserIdentifier(),
+					'user_id' => $this->requestStack->getSession()->get('user_id'),
+
 					'extended' => 1,
 					'filter' => 'moder',
 				],

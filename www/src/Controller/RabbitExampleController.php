@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Contract\OpenAIMessage;
+use App\Contract\OpenAIGeneralMessage;
 use App\Service\RabbitMQProducerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +22,7 @@ class RabbitExampleController extends AbstractController
     #[Route('/api/v1/test/publish', 'publish_message', methods: ['POST'])]
     public function publishMessage(): Response
     {
-        $message = new OpenAIMessage();
+        $message = (new OpenAIGeneralMessage())->setMessageText("");
         $this->rabbitMQProducerService->sendMessage($message, 'analysis');
 
         return new JsonResponse(['message' => 'Message published'], Response::HTTP_OK);

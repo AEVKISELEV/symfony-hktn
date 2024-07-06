@@ -6,12 +6,15 @@
     <section class="group-page group-list">
       <GroupList />
     </section>
-    <section class="group-page comment-list"></section>
+    <section class="group-page comment-list">
+			<PostList :selectedPost=null />
+		</section>
   </div>
 </template>
 
 <script setup>
   import GroupList from './groups/GroupList.vue';
+	import PostList from "./PostList.vue";
 </script>
 
 <style scoped>
