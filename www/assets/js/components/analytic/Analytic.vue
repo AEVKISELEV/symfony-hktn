@@ -28,16 +28,15 @@ const data = ref([]);
 const fetchAnalytics = async () => {
   const postId = route.params.postId;
   const groupId = route.params.groupId;
-
     axios.post(`/api/v1/analytic/generate`, {
-      postId, groupId,
+      postId: groupId, groupId: postId,
     });
 
     setInterval(async () => {
       const response = await axios.get(`/api/v1/analytic/${postId}/${groupId}`);
       status.value = response.data.status;
       data.value = response.data.data;
-    }, 100)
+    }, 500)
 };
 
 onMounted(() => {

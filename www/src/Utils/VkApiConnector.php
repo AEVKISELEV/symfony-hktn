@@ -61,7 +61,7 @@ class VkApiConnector
 			);
 	}
 
-	public function getComments(string $groupId, int $postId, int $count = 100): array
+	public function getComments(string $groupId, string $postId, int $count = 100): array
 	{
 		return
 			$this->apiClient->wall()->getComments(
