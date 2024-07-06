@@ -23,7 +23,7 @@ class RabbitExampleController extends AbstractController
     public function publishMessage(): Response
     {
         $message = new OpenAIMessage();
-        $this->rabbitMQProducerService->sendMessage($message, 'testik');
+        $this->rabbitMQProducerService->sendMessage($message, 'analysis');
 
         return new JsonResponse(['message' => 'Message published'], Response::HTTP_OK);
     }
