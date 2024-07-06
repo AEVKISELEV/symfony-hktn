@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
+use App\Repository\CommentRepository;
+use App\Repository\PostRepository;
 use DateTimeImmutable;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class CommentController extends AbstractController
+final class CommentController extends BaseController
 {
 	#[Route(path: "/api/v1/comments/{postId}", name: "app_comments", methods: ["GET"])]
 	public function commentsList(int $postId): Response

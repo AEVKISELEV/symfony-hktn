@@ -1,17 +1,26 @@
 <template>
-	<div id="app">
-		<h1>Hello Vue.js with Symfony!</h1>
-	</div>
+  <div id="app">
+    <nav>
+      <button @click="goToAuth">Go to Auth</button>
+    </nav>
+    <router-view/>
+  </div>
 </template>
 
 <script>
 export default {
-name: 'App',
+  name: 'App',
+  methods: {
+    goToAuth() {
+      this.$router.push('/auth');
+    }
+  }
 };
 </script>
 
-<style scoped>
-h1 {
-color: #42b983;
+<style>
+nav {
+display: flex;
+gap: 10px;
 }
 </style>

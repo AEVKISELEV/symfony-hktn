@@ -2,17 +2,20 @@
 
 namespace App\Controller;
 
+use App\Utils\VkApiConnector;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class GroupController extends AbstractController
+final class GroupController extends BaseController
 {
 	#[Route(path: "/api/v1/groups", name: "app_groups_list", methods: "GET")]
-	public function groupsList(): Response
+	public function groupsList(VkApiConnector $vkApiConnector): Response
 	{
+		$groups = $vkApiConnector->getGroups();
+
 		$result = [
 			[
 				'id' => 1,
