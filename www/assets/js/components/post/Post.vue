@@ -1,23 +1,22 @@
 <template>
   <div class="single-post">
     <div class="post-header">
-      <img :src="post.user.avatar" alt="User Avatar" class="avatar" />
+      <img :src="post.icon" alt="User Avatar" class="avatar" />
       <div class="user-info">
-        <h3 class="username">{{ post.user.name }}</h3>
-        <p class="post-time">{{ post.time }}</p>
+        <h3 class="postname">{{ post.title }}</h3>
       </div>
     </div>
     <div class="post-content">
-      <p>{{ post.content }}</p>
+      <p>{{ post.text }}</p>
       <div class="post-images">
         <img v-for="(image, index) in post.images" :key="index" :src="image" alt="Post Image" class="post-image" />
       </div>
     </div>
     <div class="post-actions">
-      <button @click="likePost">Like ({{ post.likes }})</button>
-      <button @click="commentPost">Comment ({{ comments.length }})</button>
+      <div>Likes ({{ post.likes.count }})</div>
+      <div>Comment ({{ post.comments.count }})</div>
     </div>
-    <CommentList :comments="comments" @reply-to-comment="handleReplyToComment" />
+    <CommentList :comments="comments" :profiles="profiles" @reply-to-comment="handleReplyToComment" />
   </div>
 </template>
 
@@ -38,29 +37,19 @@ export default {
   },
   data() {
     return {
-      comments: []
+      comments: [],
+      profiles: []
     };
   },
   methods: {
-    likePost() {
-      this.$emit('like-post', this.post.id);
-    },
-    commentPost() {
-      this.$emit('comment-post', this.post.id);
-    },
     handleReplyToComment(commentId) {
       console.log(`Reply to comment ${commentId}`);
     },
     fetchComments() {
       axios.get(`http://localhost/api/v1/comments/${this.post.id}`)
           .then(response => {
-            this.comments = response.data.map(comment => ({
-              ...comment,
-              user: {
-                name: comment.author,
-                avatar: 'https://via.placeholder.com/40' // Замените на реальный URL аватара, если он есть
-              }
-            }));
+            this.comments = response.data.items;
+            this.profiles = response.data.profiles;
           })
           .catch(error => {
             console.error('Error fetching comments:', error);
@@ -79,7 +68,13 @@ border: 1px solid #ccc;
 padding: 16px;
 margin-bottom: 16px;
 border-radius: 8px;
-background-color: #fff;
+background-color: #F9F9F9;;
+  font-family: Roboto,serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 1px;
+  text-align: left;
 }
 
 .post-header {
@@ -99,7 +94,7 @@ display: flex;
 flex-direction: column;
 }
 
-.username {
+.postname {
 margin: 0;
 font-size: 1.2em;
 }
