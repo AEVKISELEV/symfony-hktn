@@ -23,6 +23,13 @@ class VkUser implements ResourceOwnerInterface
 		return $this->response['email'] || null;
 	}
 
+	public function getName(): ?string
+	{
+		return $this->response['first_name'] . $this->response['last_name'];
+	}
+
+
+
 	public function toArray(): array
 	{
 		return $this->response;

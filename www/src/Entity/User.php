@@ -38,6 +38,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 		return $this->vkId;
 	}
 
+	public function setVkId(?int $vkId): void
+	{
+		$this->vkId = $vkId;
+	}
+
 	public function getEmail(): ?string
 	{
 		return $this->email;
