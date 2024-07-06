@@ -65,6 +65,21 @@ services:
     networks:
       - app-network
 
+  go:
+    build: ./go
+    container_name: go
+    networks:
+      - app-network
+    environment:
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBITMQ_USER_NAME: ${RABBITMQ_USER_NAME}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_ADMIN_PORT: ${RABBITMQ_ADMIN_PORT}
+      OPENAI_TOKEN: ${OPENAI_TOKEN}
+      HTTP_PROXY: ${HTTP_PROXY}
+
+
 networks:
   app-network:
     driver: bridge
