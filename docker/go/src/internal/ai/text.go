@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/AEVKISELEV/symfony-hktn/internal/gpt"
+	"github.com/AEVKISELEV/symfony-hktn/internal/proxyclient"
 	"github.com/sashabaranov/go-openai"
 	"go.uber.org/zap"
 	"net/http"
@@ -132,7 +133,10 @@ func (tg *TextGenerator) GenerateText(id string, data TextData) error {
 }
 
 func (tg *TextGenerator) sendCallback(id, text string) error {
-	client := http.Client{}
+	client, err := proxyclient.ProxyAwareHttpClient(true)
+	if err != nil {
+		return err
+	}
 
 	cr := CallbackResponse{
 		ID:      id,
@@ -144,17 +148,12 @@ func (tg *TextGenerator) sendCallback(id, text string) error {
 		return fmt.Errorf("cannot marshal callback response: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", tg.endpoint, bytes.NewBuffer(b))
-	if err != nil {
-		return fmt.Errorf("cannot create request: %w", err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
+	resp, err := client.Post(tg.endpoint, "application/json", bytes.NewBuffer(b))
 	if err != nil {
 		return fmt.Errorf("cannot send request: %w", err)
 	}
+
+	tg.logger.Info("Send analytics", zap.String("id", id), zap.String("endpoint", tg.endpoint))
 
 	if resp.StatusCode != http.StatusOK {
 		b := bytes.Buffer{}

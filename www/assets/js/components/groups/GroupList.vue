@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, defineEmits} from 'vue';
 import axios from 'axios';
 
 const items = ref([]);
@@ -21,6 +21,11 @@ const fetchGroups = async () => {
     console.error('Ошибка при получении данных:', error);
   }
 };
+
+const emit = defineEmits(['selectGroup']);
+function handleClick(id) {
+	emit('selectGroup', id);
+}
 
 onMounted(() => {
   fetchGroups();

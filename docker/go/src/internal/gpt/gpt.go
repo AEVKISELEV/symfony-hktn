@@ -19,7 +19,7 @@ func createOpenAIClient(token string) (*openai.Client, error) {
 	clientConfig := openai.DefaultConfig(token)
 
 	var err error
-	clientConfig.HTTPClient, err = proxyclient.ProxyAwareHttpClient()
+	clientConfig.HTTPClient, err = proxyclient.ProxyAwareHttpClient(false)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create proxy client: %w", err)
 	}
