@@ -24,7 +24,7 @@ export default {
       this.$router.push('/groups');
     },
     goToPost() {
-      this.$router.push('/post/1');
+      this.$router.push('/post/-216195050/23');
     }
   }
 };

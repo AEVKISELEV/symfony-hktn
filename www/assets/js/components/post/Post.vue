@@ -13,8 +13,8 @@
       </div>
     </div>
     <div class="post-actions">
-      <div>Likes ({{ post.likes.count }})</div>
-      <div>Comment ({{ post.comments.count }})</div>
+      <div>Нравится: {{ post.likes.count }}</div>
+      <div>Комментарии: {{ post.comments.count }}</div>
     </div>
     <CommentList :comments="comments" :profiles="profiles" @reply-to-comment="handleReplyToComment" />
   </div>

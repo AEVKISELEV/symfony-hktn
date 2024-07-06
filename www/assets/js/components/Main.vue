@@ -70,6 +70,8 @@ body {
 .group-list {
   margin-left: 60px;
   width: 856px;
+  margin-bottom: 60px;
+  overflow-y: scroll;
 }
 
 .comment-list {
