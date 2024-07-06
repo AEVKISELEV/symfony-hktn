@@ -1,0 +1,10 @@
+enqueue:
+    default:
+        transport:
+            dsn: "amqp://%env(RABBITMQ_USER_NAME)%:%env(RABBITMQ_PASSWORD)%@%env(RABBITMQ_HOST)%:%env(RABBITMQ_PORT)%"
+        client:
+            prefix: 'app'
+            app_name: 'my_app'
+            router_topic: 'router'
+            router_queue: 'default'
+            traceable_producer: true
