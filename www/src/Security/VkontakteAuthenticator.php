@@ -9,7 +9,9 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -23,18 +25,30 @@ class VkontakteAuthenticator extends OAuth2Authenticator implements Authenticati
 	private $clientRegistry;
 	private $entityManager;
 	private $router;
+	private $requestStack;
 
 	public function __construct(
 		ClientRegistry $clientRegistry,
 		EntityManagerInterface $entityManager,
 		RouterInterface $router,
+		RequestStack $requestStack
 	)
 	{
 		$this->clientRegistry = $clientRegistry;
 		$this->entityManager = $entityManager;
 		$this->router = $router;
+		$this->requestStack = $requestStack;
 	}
+	public function getSession()
+	{
+		$request = $this->requestStack->getCurrentRequest();
 
+		// Check if the session has been started
+		if ($request->hasPreviousSession()) {
+			// Get and return the session
+			return $request->getSession();
+		}
+	}
 	public function supports(Request $request): ?bool
 	{
 		return $request->attributes->get('_route') === 'connect_vk_check';
@@ -51,25 +65,33 @@ class VkontakteAuthenticator extends OAuth2Authenticator implements Authenticati
 				/** @var VkUser $vkU */
 				$vkU = $client->fetchUserFromToken($accessToken);
 
-				$email = $vkU->getEmail();
-
-				// 1) have they logged in with Facebook before? Easy!
 				$existingUser =
-					$this->entityManager->getRepository(User::class)->findOneBy(['id' => $vkU->getId()]);
+					$this->entityManager->getRepository(User::class)->findOneBy(['vkId' => $vkU->getId()]);
 
 				if ($existingUser)
 				{
+					if ($accessToken->getToken() !== $existingUser->getAccessToken())
+					{
+						$existingUser->setRefreshToken($accessToken->getRefreshToken());
+						$existingUser->setAccessToken($accessToken->getToken());
+
+						$this->entityManager->persist($existingUser);
+						$this->entityManager->flush();
+					}
 					return $existingUser;
 				}
 
-				$user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+				$user = new User();
 
 				// 3) Maybe you just want to "register" them by creating
 				// a User object
 				$user->setVkId($vkU->getId());
-				$user->setEmail($vkU->getEmail());
-				$user->setName($vkU->getName());
 				$user->setPassword(hash('sha1', $vkU->getId()));
+				$user->setFirstname($vkU->getFirstname());
+				$user->getLastname($vkU->getLastName());
+
+				$user->setRefreshToken($accessToken->getRefreshToken());
+				$user->setAccessToken($accessToken->getToken());
 
 				$this->entityManager->persist($user);
 				$this->entityManager->flush();
@@ -83,12 +105,10 @@ class VkontakteAuthenticator extends OAuth2Authenticator implements Authenticati
 	public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
 	{
 		// change "app_homepage" to some route in your app
-		$targetUrl = $this->router->generate('app_homepage');
+		$targetUrl = $this->router->generate('app_index');
+		$this->getSession()->set('access_token', $token->getUser()->getUserIdentifier());
 
 		return new RedirectResponse($targetUrl);
-
-		// or, on success, let the request continue to be handled by the controller
-		//return null;
 	}
 
 	public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response

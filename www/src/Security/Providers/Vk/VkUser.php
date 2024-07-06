@@ -10,25 +10,33 @@ class VkUser implements ResourceOwnerInterface
 
 	public function __construct(array $response)
 	{
-		$this->response = $response;
+		$this->response = $response['response'];
 	}
 
 	public function getId()
 	{
-		return $this->response['id'];
+		return $this->response['id'] ?? null;
 	}
 
 	public function getEmail(): ?string
 	{
-		return $this->response['email'] || null;
+		return $this->response['email'] ?? null;
 	}
 
 	public function getName(): ?string
 	{
-		return $this->response['first_name'] . $this->response['last_name'];
+		return $this->response['first_name'] . ' ' . $this->response['last_name'];
 	}
 
+	public function getLastName(): ?string
+	{
+		return $this->response['last_name'] ?? null;
+	}
 
+	public function getFirstName(): ?string
+	{
+		return $this->response['first_name'] ?? null;
+	}
 
 	public function toArray(): array
 	{
