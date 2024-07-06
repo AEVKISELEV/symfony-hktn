@@ -25,7 +25,7 @@ RUN pecl install memcached && docker-php-ext-enable memcached
 RUN pecl install amqp && docker-php-ext-enable amqp
 
 # Install additional PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql pgsql
+RUN docker-php-ext-install pdo pdo_pgsql pgsql sockets
 
 WORKDIR /var/www/html
 
