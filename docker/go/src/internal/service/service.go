@@ -60,7 +60,7 @@ func Start() error {
 		return fmt.Errorf("cannot create rabbit instance")
 	}
 
-	s.aiText, err = ai.NewTextGenerator(s.config.AITextConfig, "http://nginx/api/v1/ai/generate")
+	s.aiText, err = ai.NewTextGenerator(s.config.AITextConfig, "http://nginx/api/v1/ai/generate", s.logger)
 	if err != nil {
 		return fmt.Errorf("cannot create ai text generator: %w", err)
 	}

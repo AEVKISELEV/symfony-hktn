@@ -4,6 +4,7 @@
   "content": {
     "post": {
       "text": "string...",
+      "likes": 0,
       "attachments": [
         {"type": "PICTURE", "src": "https://sun9-73.userapi.com/impg/w7jzd4899yIgUaSNRpcZd0gfUrl7WOFmkYv4qQ/Pkeg5Rre6bQ.jpg?size=960x1172&quality=95&sign=4bc2262e18a4ca99ce2fcb2fe956b86d&type=album"},
         {"type": "PICTURE", "src": "https://sun9-73.userapi.com/impg/w7jzd4899yIgUaSNRpcZd0gfUrl7WOFmkYv4qQ/Pkeg5Rre6bQ.jpg?size=960x1172&quality=95&sign=4bc2262e18a4ca99ce2fcb2fe956b86d&type=album"}
@@ -13,6 +14,7 @@
       {
         "username": "Vasil Vasil",
         "text": "string...",
+        "likes": 12,
         "attachments": [
           {"type": "PICTURE", "src": "https://sun9-73.userapi.com/impg/w7jzd4899yIgUaSNRpcZd0gfUrl7WOFmkYv4qQ/Pkeg5Rre6bQ.jpg?size=960x1172&quality=95&sign=4bc2262e18a4ca99ce2fcb2fe956b86d&type=album"},
           {"type": "PICTURE", "src": "https://sun9-73.userapi.com/impg/w7jzd4899yIgUaSNRpcZd0gfUrl7WOFmkYv4qQ/Pkeg5Rre6bQ.jpg?size=960x1172&quality=95&sign=4bc2262e18a4ca99ce2fcb2fe956b86d&type=album"}
@@ -21,6 +23,7 @@
       {
         "username": "Vasil Vasil",
         "text": "string...",
+        "likes": 44,
         "attachments": [
           {"type": "PICTURE", "src": "https://sun9-73.userapi.com/impg/w7jzd4899yIgUaSNRpcZd0gfUrl7WOFmkYv4qQ/Pkeg5Rre6bQ.jpg?size=960x1172&quality=95&sign=4bc2262e18a4ca99ce2fcb2fe956b86d&type=album"},
           {"type": "PICTURE", "src": "https://sun9-73.userapi.com/impg/w7jzd4899yIgUaSNRpcZd0gfUrl7WOFmkYv4qQ/Pkeg5Rre6bQ.jpg?size=960x1172&quality=95&sign=4bc2262e18a4ca99ce2fcb2fe956b86d&type=album"}
