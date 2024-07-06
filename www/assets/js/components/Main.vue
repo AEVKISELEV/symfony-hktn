@@ -4,17 +4,42 @@
   </header>
   <div class="group-page-wrapper">
     <section class="group-page group-list">
-      <GroupList />
+			<component :is="leftComponent" :postId="selectedPost" @selectGroup="selectGroup"/>
     </section>
     <section class="group-page comment-list">
-			<PostList :selectedPost=null />
+			<PostList @selectPost="selectPost" :selectedGroup="selectedGroup" />
 		</section>
   </div>
 </template>
 
-<script setup>
+<script>
   import GroupList from './groups/GroupList.vue';
 	import PostList from "./PostList.vue";
+	import PostPage from "./post/PostPage.vue";
+
+	export default {
+		name: 'Main',
+		components: {PostList, GroupList, PostPage},
+		data() {
+			return {
+				selectedPost: null,
+				selectedGroup: null,
+			};
+		},
+		methods: {
+			selectGroup(selectedGroup) {
+				this.selectedGroup = selectedGroup;
+			},
+			selectPost(selectedPost) {
+				this.selectedPost = selectedPost;
+			}
+		},
+		computed: {
+			leftComponent() {
+				return this.selectedPost ? 'PostPage' : 'GroupList';
+			},
+		},
+	};
 </script>
 
 <style scoped>
