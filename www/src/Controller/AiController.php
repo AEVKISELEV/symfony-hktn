@@ -152,8 +152,8 @@ final class AiController extends BaseController
 			],
 		];
 
-		$producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message)), 'analysis');
 		$producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message2)), 'analysis');
+		$producerService->sendMessage(new OpenAIGeneralMessage(json_encode($message)), 'analysis');
 
 		return $this->json(
 			[
