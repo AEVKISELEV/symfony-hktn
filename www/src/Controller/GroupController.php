@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -65,5 +66,19 @@ final class GroupController extends AbstractController
 		];
 
 		return $this->json($result);
+	}
+
+	#[Route(path: "/api/v1/groups", name: "app_create_group", methods: ["POST"])]
+	public function createGroup(Request $request): Response
+	{
+		$data = json_decode($request->getContent(), true);
+		$link = $data['link'] ?? throw new \Exception("HAS NO LINK");
+
+		return $this->json(
+			[
+				'status' => 'success',
+				'data' => $data,
+			],
+		);
 	}
 }
