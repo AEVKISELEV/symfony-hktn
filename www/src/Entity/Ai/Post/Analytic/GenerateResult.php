@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 class GenerateResult
 {
 	const string GENERAL = 'general';
+	const string IMAGE = 'image';
+
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column(type: Types::BIGINT)]
