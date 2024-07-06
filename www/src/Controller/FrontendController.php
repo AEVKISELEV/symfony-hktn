@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Utils\VkApiConnector;
 use GuzzleHttp\ClientInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
