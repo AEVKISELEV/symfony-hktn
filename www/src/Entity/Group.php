@@ -13,6 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`app_group`')]
 class Group
 {
+	#[ORM\Id]
+	#[ORM\GeneratedValue]
+	#[ORM\Column(type: Types::BIGINT)]
+	private int $id;
+
 	#[ORM\Column(type: Types::STRING, length: 50)]
 	#[Assert\Length(min: 2, max: 50)]
 	public string $title;
@@ -23,10 +28,6 @@ class Group
 	public ?string $description = null;
 	#[ORM\Column(type: Types::DATETIMETZ_IMMUTABLE, updatable: false)]
 	public DateTimeImmutable $createDateTime;
-	#[ORM\Id]
-	#[ORM\GeneratedValue]
-	#[ORM\Column(type: Types::BIGINT)]
-	private int $id;
 
 	public function getId(): int
 	{

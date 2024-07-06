@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class PostController extends AbstractController
+final class PostController extends BaseController
 {
 	#[Route(path: "/api/v1/posts/{groupId}", name: "app_posts", methods: ["GET"])]
 	public function postsList(int $groupId): Response
