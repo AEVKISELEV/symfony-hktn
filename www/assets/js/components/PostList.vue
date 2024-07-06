@@ -15,6 +15,11 @@ export default {
 	props: {
 		selectedGroup: Number,
 	},
+	methods: {
+		selectPost(id) {
+			this.$emit('selectPost', id);
+		}
+	},
 	computed: {
 		currentComponent() {
 			return this.selectedGroup ? 'List' : 'Empty';

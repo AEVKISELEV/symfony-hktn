@@ -1,6 +1,6 @@
 <template>
 	<div id="post-list" class="post-list-block">
-		<div v-for:="post in posts" class="post-item">
+		<div v-for:="post in posts" class="post-item" @click="handleClick(post.id)">
 			<div class="post-item-left">
 			</div>
 			<div class="post-item-right">
@@ -41,6 +41,11 @@ export default {
 			message: '',
 			posts: [],
 		};
+	},
+	methods: {
+		handleClick(id) {
+			this.$emit('selectPost', id);
+		}
 	},
 	mounted() {
 		axios.get('/api/v1/posts/' + this.groupId)
