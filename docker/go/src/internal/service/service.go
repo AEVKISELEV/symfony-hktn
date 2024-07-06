@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/AEVKISELEV/symfony-hktn/internal/ai"
 	"github.com/AEVKISELEV/symfony-hktn/internal/logger"
 	"github.com/AEVKISELEV/symfony-hktn/internal/rabbit"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -15,10 +16,15 @@ type Service struct {
 
 	logger *zap.Logger
 	rabbit *rabbit.Rabbit
+
+	// generators
+	aiText *ai.TextGenerator
 }
 
 type Config struct {
 	RabbitConfig RabbitConfig
+
+	AITextConfig ai.TextGeneratorConfig
 }
 
 type RabbitConfig struct {
@@ -52,6 +58,11 @@ func Start() error {
 		return fmt.Errorf("cannot create rabbit instance")
 	}
 
+	s.aiText, err = ai.NewTextGenerator(s.config.AITextConfig)
+	if err != nil {
+		return fmt.Errorf("cannot create ai text generator: %w", err)
+	}
+
 	err = s.Listen()
 	if err != nil {
 		return fmt.Errorf("cannot start listening: %w", err)
@@ -63,12 +74,17 @@ func Start() error {
 func (s *Service) Listen() error {
 	s.logger.Info("Service start listening")
 
-	s.routeQueue("analysis", s.handleAnalysis)
+	err := s.routeQueue("analysis", s.handleAnalysis)
+	if err != nil {
+		return fmt.Errorf("cannot route analysis queue: %w", err)
+	}
+
 	return nil
 }
 
 func (s *Service) handleAnalysis(d amqp.Delivery) error {
 	s.logger.Info("handle analysis", zap.String("body", string(d.Body)))
+
 	return nil
 }
 
@@ -96,8 +112,15 @@ func readConfig() (Config, error) {
 		return Config{}, fmt.Errorf("cannot read rabbit config: %w", err)
 	}
 
+	aiTextCfg, err := readAITextConfig()
+	if err != nil {
+		return Config{}, fmt.Errorf("cannot read ai text config: %w", err)
+	}
+
 	return Config{
 		RabbitConfig: rabbitCfg,
+
+		AITextConfig: aiTextCfg,
 	}, nil
 }
 
@@ -143,5 +166,16 @@ func readRabbitConfig() (RabbitConfig, error) {
 		Host:      host,
 		Port:      portInt,
 		AdminPort: adminPortInt,
+	}, nil
+}
+
+func readAITextConfig() (ai.TextGeneratorConfig, error) {
+	token, ok := os.LookupEnv("OPENAI_TOKEN")
+	if !ok {
+		return ai.TextGeneratorConfig{}, fmt.Errorf("cannot read OPENAI_TOKEN")
+	}
+
+	return ai.TextGeneratorConfig{
+		OpenAIToken: token,
 	}, nil
 }
