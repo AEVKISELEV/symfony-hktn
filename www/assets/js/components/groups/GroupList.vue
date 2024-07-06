@@ -33,7 +33,7 @@ onMounted(() => {
     <span class="user-name">{{ user.name }}</span>
   </div>
   <div class="grid-container">
-    <div v-for="item in items" :key="item.id" class="grid-item">
+    <div v-for="item in items" :key="item.id" class="grid-item" @click="handleClick(item.id)">
       <img :src="item.image" alt="Item Image" class="item-image"/>
       <h3>{{ item.title }}</h3>
     </div>
