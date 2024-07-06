@@ -81,6 +81,9 @@ func (s *Service) Listen() error {
 		return fmt.Errorf("cannot route analysis queue: %w", err)
 	}
 
+	for true {
+	}
+
 	return nil
 }
 
