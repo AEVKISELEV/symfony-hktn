@@ -1,11 +1,14 @@
 package ai
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/AEVKISELEV/symfony-hktn/internal/gpt"
 	"github.com/sashabaranov/go-openai"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 type TextData struct {
@@ -70,11 +73,49 @@ func NewTextGenerator(config TextGeneratorConfig, endpoint string, logger *zap.L
 
 func loadTextPrepromt() (string, error) {
 	return `
-Ты - аналитик в компании, который занимается анализом сделанных постов в группе социальной сети, посвященной компании в которой ты работаешь. Тебе нужно проанализировать пост, сделанный в группу, и комментарии которые в этой группе были оставлены.
-На основе этих данных тебе надо сделать краткую выжимку поста и комментариев, дать общую оценку посту и комментариям, а также выдать рекомендации по улучшению.
+Ты - аналитик в компании, который занимается анализом постов в группе социальной сети, посвященной компании, в которой ты работаешь. Тебе нужно проанализировать пост, сделанный в группу, и комментарии, которые в этой группе были оставлены.
+
+На основе этих данных тебе нужно:
+1. Дать общую оценку посту и комментариям.
+2. Выдать рекомендации по улучшению поста.
+
+**Критерии оценки поста:**
+- Текст: Ясность, грамотность, соответствие целевой аудитории.
+- Стилистика: Тон, стиль, соответствие бренду.
+
+**Критерии оценки комментариев:**
+- Общее настроение: Позитивное, негативное, нейтральное.
+- Основные темы: Что больше всего нравится и не нравится пользователям.
+
+**Формат ответа:**
+1. **Общая оценка поста:**
+- Текст: [оценка]
+- Стилистика: [оценка]
+
+2. **Общая оценка комментариев:**
+- Настроение: [описание настроения]
+- Основные темы: [описание тем]
+
+3. **Рекомендации по улучшению поста:**
+- [рекомендация 1]
+- [рекомендация 2]
+
+**Пример ответа:**
+1. **Общая оценка поста:**
+- Текст: Ясный и грамотный, но можно улучшить структуру.
+- Стилистика: Соответствует бренду, но слишком формальный тон.
+
+2. **Общая оценка комментариев:**
+- Настроение: В основном позитивное, но есть несколько негативных комментариев.
+- Основные темы: Пользователям нравится визуальный контент, но они жалуются на сложность навигации.
+
+3. **Рекомендации по улучшению поста:**
+- Упростить структуру текста.
+- Смягчить тон, сделать его более дружелюбным.
+
+Используй в ответе просто текст. Не пиши в формате markdown.
 
 Данные будут приходить в следующем формате:
-
 *текст поста* || *количество лайков к посту* |||| *Имя пользователя, оставившего комментарий*: *текст комментария 1* || *количество лайков к комментарию 1* |||| ... |||| *Имя пользователя, оставившего комментарий*: *текст комментария N* || *количество лайков к комментарию N*
 `, nil
 }
@@ -91,5 +132,45 @@ func (tg *TextGenerator) GenerateText(id string, data TextData) error {
 }
 
 func (tg *TextGenerator) sendCallback(id, text string) error {
+	client := http.Client{}
+
+	cr := CallbackResponse{
+		ID:      id,
+		Content: text,
+	}
+
+	b, err := json.Marshal(cr)
+	if err != nil {
+		return fmt.Errorf("cannot marshal callback response: %w", err)
+	}
+
+	req, err := http.NewRequest("POST", tg.endpoint, bytes.NewBuffer(b))
+	if err != nil {
+		return fmt.Errorf("cannot create request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("cannot send request: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		b := bytes.Buffer{}
+		n, err := b.ReadFrom(resp.Body)
+
+		if err != nil {
+			return fmt.Errorf("unexpected status code: %d; cannot read body: %w", resp.StatusCode, err)
+		}
+		if n == 0 {
+			return fmt.Errorf("unexpected status code: %d; empty body", resp.StatusCode)
+		}
+
+		return fmt.Errorf("unexpected status code: %d; body: %s", resp.StatusCode, string(b.Bytes()))
+	}
+
+	tg.logger.Info("callback sent", zap.String("id", id))
+
 	return nil
 }

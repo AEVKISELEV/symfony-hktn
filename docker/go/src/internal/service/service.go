@@ -103,7 +103,7 @@ func (s *Service) handleAnalysis(d amqp.Delivery) error {
 	}
 
 	switch data.Type {
-	case "text":
+	case ai.TypeText:
 		var textData ai.TextData
 		err = util.ParseJSONData(data.Content, &textData)
 		if err == nil {
