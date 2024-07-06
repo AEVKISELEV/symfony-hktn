@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Exception;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -70,6 +70,25 @@ final class GroupController extends AbstractController
 	}
 
 	#[Route(path: "/api/v1/groups", name: "app_create_group", methods: ["POST"])]
+	#[OA\RequestBody(
+		description: "Create a new group",
+		required: true,
+		content: new OA\JsonContent(
+			properties: [new OA\Property(property: "link", type: "string", description: "The link for the group")],
+			type:       "object",
+		)
+	)]
+	#[OA\Response(
+		response: 200,
+		description: "Returns the rewards of a user",
+		content: new OA\JsonContent(
+			properties: [
+							new OA\Property(property: "status", type: "string", description: "Response status"),
+							new  OA\Property(property: "data", type: "object", description: "Request data"),
+						],
+			type:       "object",
+		)
+	)]
 	public function createGroup(Request $request): Response
 	{
 		$data = json_decode($request->getContent(), true);
