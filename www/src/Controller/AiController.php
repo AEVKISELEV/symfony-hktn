@@ -91,12 +91,6 @@ final class AiController extends BaseController
 		$comments = $vkApiConnector->getComments($groupId, $postId);
 		$post = $vkApiConnector->getPost($groupId, $postId);
 		$commentsMe = [];
-		$comment = [
-			'username' => 1111,
-			'text' => 'asa',
-			'likes' => 123,
-			'attachments' => [],
-		];
 
 		foreach ($comments['items'] as $comment)
 		{
