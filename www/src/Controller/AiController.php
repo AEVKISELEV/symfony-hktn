@@ -32,11 +32,12 @@ final class AiController extends BaseController
 			return $this->json(['status' => 'error', 'message' => 'contentIsEmpty'], 400);
 		}
 
-		[$postId, $groupId] = explode('.', $id);
+		[$postId, $groupId, $type] = explode('.', $id);
 		$generateResult = new GenerateResult();
 		$generateResult->content = $content;
 		$generateResult->vkPostId = $postId;
 		$generateResult->vkGroupId = $groupId;
+		$generateResult->type = $type;
 		$generateResult->dateCreate = new \DateTimeImmutable();
 
 		try
@@ -118,7 +119,7 @@ final class AiController extends BaseController
 		$post = $post['items'][0];
 		$message = [
 			'type' => "TEXT",
-			'id' => $postId . '.' . $groupId,
+			'id' => $postId . '.' . $groupId . '.' . GenerateResult::GENERAL,
 			'content' => [
 				'post' => [
 					'text' => $post['text'],

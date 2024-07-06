@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: '`app_ai_post_analytic_generate_result`')]
 class GenerateResult
 {
+	const string GENERAL = 'general';
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column(type: Types::BIGINT)]
@@ -28,7 +29,7 @@ class GenerateResult
 	public DateTimeImmutable $dateCreate;
 
 	#[ORM\Column(type: Types::TEXT)]
-	public string $type = 'general';
+	public string $type = self::GENERAL;
 
 	public function getId(): int
 	{
