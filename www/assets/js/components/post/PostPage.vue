@@ -2,6 +2,9 @@
   <div className="single-post-page">
     <Post v-if="post" :post="post" @like-post="handleLikePost" @comment-post="handleCommentPost"/>
     <CommentList v-if="comments.length" :comments="comments" @reply-to-comment="handleReplyToComment"/>
+    <button @click="goToAnal">
+      Сгенерить
+    </button>
   </div>
 </template>
 
@@ -23,6 +26,9 @@ export default {
     };
   },
   methods: {
+    goToAnal() {
+      this.$router.push(`/analytics/${this.$route.params.postId}/${this.$route.params.groupId}`);
+    },
     fetchPost() {
       const groupId = this.$route.params.groupId;
       const postId = this.$route.params.postId;
