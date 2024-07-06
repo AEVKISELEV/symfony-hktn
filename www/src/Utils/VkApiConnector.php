@@ -70,6 +70,7 @@ class VkApiConnector
 					'owner_id' => $groupId,
 					'post_id' => $postId,
 					'count' => $count,
+					'need_likes' => 1,
 					'extended' => 1,
 				]
 			);
