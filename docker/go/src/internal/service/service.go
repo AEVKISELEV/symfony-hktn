@@ -5,6 +5,7 @@ import (
 	"github.com/AEVKISELEV/symfony-hktn/internal/logger"
 	"go.uber.org/zap"
 	"os"
+	"strconv"
 )
 
 type Service struct {
@@ -13,17 +14,75 @@ type Service struct {
 }
 
 type Config struct {
-	RabbitMQAddress string
+	RabbitConfig RabbitConfig
+}
+
+type RabbitConfig struct {
+	Password  string
+	Username  string
+	Host      string
+	Port      int
+	AdminPort int
+}
+
+func (rc RabbitConfig) Address() string {
+	return fmt.Sprintf("amqp://%s:%s@%s:%d", rc.Username, rc.Password, rc.Host, rc.Port)
 }
 
 func readConfig() (Config, error) {
-	rabbit, ok := os.LookupEnv("RABBITMQ_ADDRESS")
-	if !ok {
-		return Config{}, fmt.Errorf("cannot read rabbitmq address from env")
+
+	rabbit, err := readRabbitConfig()
+	if err != nil {
+		return Config{}, fmt.Errorf("cannot read rabbit config: %w", err)
 	}
 
 	return Config{
-		RabbitMQAddress: rabbit,
+		RabbitConfig: rabbit,
+	}, nil
+}
+
+func readRabbitConfig() (RabbitConfig, error) {
+	passwd, ok := os.LookupEnv("RABBIT_PASSWORD")
+	if !ok {
+		return RabbitConfig{}, fmt.Errorf("cannot read RABBIT_PASSWORD")
+	}
+
+	user, ok := os.LookupEnv("RABBIT_USERNAME")
+	if !ok {
+		return RabbitConfig{}, fmt.Errorf("cannot read RABBIT_USERNAME")
+	}
+
+	host, ok := os.LookupEnv("RABBIT_HOST")
+	if !ok {
+		return RabbitConfig{}, fmt.Errorf("cannot read RABBIT_HOST")
+	}
+
+	port, ok := os.LookupEnv("RABBIT_PORT")
+	if !ok {
+		return RabbitConfig{}, fmt.Errorf("cannot read RABBIT_PORT")
+	}
+
+	portInt, err := strconv.Atoi(port)
+	if err != nil {
+		return RabbitConfig{}, fmt.Errorf("cannot convert RABBIT_PORT to int: %w", err)
+	}
+
+	adminPort, ok := os.LookupEnv("RABBIT_ADMIN_PORT")
+	if !ok {
+		return RabbitConfig{}, fmt.Errorf("cannot read RABBIT_ADMIN_PORT")
+	}
+
+	adminPortInt, err := strconv.Atoi(adminPort)
+	if err != nil {
+		return RabbitConfig{}, fmt.Errorf("cannot convert RABBIT_ADMIN_PORT to int: %w", err)
+	}
+
+	return RabbitConfig{
+		Password:  passwd,
+		Username:  user,
+		Host:      host,
+		Port:      portInt,
+		AdminPort: adminPortInt,
 	}, nil
 }
 
