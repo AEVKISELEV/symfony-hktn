@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class FrontendController extends AbstractController
+final class FrontendController extends BaseController
 {
 	#[Route("/", 'app_index', methods: ['GET'])]
 	public function index(SessionInterface $session, ClientRegistry $clientRegistry): Response
