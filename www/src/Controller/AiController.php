@@ -13,15 +13,15 @@ use Symfony\Component\Routing\Attribute\Route;
 final class AiController extends AbstractController
 {
 	#[Route(path: "/api/v1/ai/generate", name: "app_ai_generate", methods: ["POST"])]
-	public function commentsList(
+	public function set(
 		Request $request,
 		PostRepository $postRepository,
 		GenerateResultRepository $generateResultRepository,
 	): Response
 	{
 		$jsonka = json_decode($request->getContent());
-		$postId = (int)$jsonka['id'];
-		$content = (string)$jsonka['content'];
+		$postId = (int)($jsonka['id'] ?? 0);
+		$content = (string)($jsonka['content'] ?? '');
 
 		$post = $postRepository->find($postId);
 		if ($post === null)
