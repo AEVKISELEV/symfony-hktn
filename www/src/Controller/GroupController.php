@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,7 +73,7 @@ final class GroupController extends AbstractController
 	public function createGroup(Request $request): Response
 	{
 		$data = json_decode($request->getContent(), true);
-		$link = $data['link'] ?? throw new \Exception("HAS NO LINK");
+		$link = $data['link'] ?? throw new Exception("HAS NO LINK");
 
 		return $this->json(
 			[
