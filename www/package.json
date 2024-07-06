@@ -15,6 +15,7 @@
         "webpack-notifier": "^1.15.0"
     },
     "dependencies": {
+        "axios": "^1.7.2",
         "core-js": "^3.37.1",
         "vue-router": "^4.4.0"
     }
