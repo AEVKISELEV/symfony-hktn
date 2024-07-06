@@ -12,10 +12,8 @@ import List from "./posts/List.vue";
 export default {
 	name: 'PostList',
 	components: {List, Empty},
-	data() {
-		return {
-			selectedPost: 1, // Измените это значение для тестирования
-		};
+	props: {
+		selectedPost: Number,
 	},
 	computed: {
 		currentComponent() {
